@@ -17,12 +17,17 @@ public class Main {
         }
         String[] letters = a.split("");
 
-
+        StringBuilder combinedBinaryRepresentation = new StringBuilder();
         //Output all characters in the string, each separated by a single space.
         for (String letter : letters) {
 
-            System.out.printf("%s = %s\n", letter,ChartoBinary(letter) );
+            //System.out.printf("%s = %s\n", letter,ChartoBinary(letter) );
+            combinedBinaryRepresentation.append(ChartoBinary(letter));
+
         }
+
+        System.out.println(encoding(combinedBinaryRepresentation.toString()));
+
 
 
 
@@ -44,16 +49,30 @@ public class Main {
         return binaryRepresentation.toString();
     }
 
-    public static String ChartoBinary2(String letter) {
-        if(letter.isEmpty())
-        {
-            return "";
+
+
+    public static String encoding(String combined){
+        StringBuilder encoded = new StringBuilder();
+        for (int i = 0; i < combined.length(); i++) {
+            int j = i;
+
+            while(j < combined.length() - 1 && combined.charAt(j) == combined.charAt(j+1) )
+            {
+                j++;
+            }
+            if(combined.charAt(i) == '1')
+            {
+                encoded.append("0 ");
+            }
+            else{
+                encoded.append("00 ");
+            }
+
+            encoded.append("0".repeat(Math.max(0, j - i + 1)));
+            encoded.append(" ");
+            i = j;
         }
-        String binaryRepresentation = Integer.toBinaryString(letter.codePointAt(0));
-        if(binaryRepresentation.length() < 7)
-        {
-            binaryRepresentation = "0" + binaryRepresentation;
-        }
-        return binaryRepresentation;
+
+        return encoded.toString();
     }
 }
