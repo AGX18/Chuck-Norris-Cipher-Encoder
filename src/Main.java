@@ -8,6 +8,13 @@ public class Main {
     public static void AnalyseWords() {
         //Prompt the user with the message: Input string:
         Scanner scanner = new Scanner(System.in);
+        //encodeMessage(scanner);
+        //decodeMessage(scanner);
+
+        System.out.println(decodeMessage(scanner));
+    }
+
+    private static void encodeMessage(Scanner scanner) {
         System.out.println("Input string:");
         String a = scanner.nextLine();
         System.out.println("The result:");
@@ -27,9 +34,29 @@ public class Main {
         }
 
         System.out.println(encoding(combinedBinaryRepresentation.toString()));
+    }
 
+    public static String decodeMessage(Scanner scanner){
+        System.out.println("Input encoded string:");
+        String a = scanner.nextLine();
+        System.out.println("The result:");
+        if(a.isEmpty())
+        {
+            return "";
+        }
 
+        String BinaryRepresentationAsWhole = decodingtoBinary(a);
 
+        //String[] BinaryRepresentation = new String[BinaryRepresentationAsWhole.length() / 7];
+        StringBuilder message = new StringBuilder();
+        for (int i = 0; i < (BinaryRepresentationAsWhole.length() / 7); i++) {
+            String BinaryRepresentaion = BinaryRepresentationAsWhole.substring(i * 7, (i + 1) * 7);
+            int number = Integer.parseInt(BinaryRepresentaion, 2);
+            char ch = (char) number;
+            message.append(ch);
+        }
+
+        return message.toString();
 
     }
 
@@ -74,5 +101,23 @@ public class Main {
         }
 
         return encoded.toString();
+    }
+
+    public static String decodingtoBinary(String input){
+        StringBuilder decoded = new StringBuilder();
+        String[] words = input.split(" ");
+        for (int i = 0; i < words.length; i+=2) {
+            if(words[i].equals("0"))
+            {
+                decoded.append("1".repeat(words[i + 1].length()));
+
+            }
+            else {
+
+                decoded.append("0".repeat(words[i + 1].length()));
+            }
+        }
+
+        return decoded.toString();
     }
 }
