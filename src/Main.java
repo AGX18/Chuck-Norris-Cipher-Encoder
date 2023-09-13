@@ -2,22 +2,41 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        AnalyseWords();
+
+        while(true)
+        {
+            System.out.println("Please input operation (encode/decode/exit):");
+            Scanner scanner = new Scanner(System.in);
+            String operation = scanner.nextLine();
+            switch (operation) {
+                case "encode" -> encodeMessage(scanner);
+                case "decode" -> {
+                    String decoded = decodeMessage(scanner);
+                    if (decoded.isEmpty()) {
+                        System.out.println("Encoded string is not valid.");
+                        break;
+                    }
+                    System.out.println("Decoded string:");
+                    System.out.println(decoded);
+                }
+                case "exit" -> {
+                    exit();
+                    return;
+                }
+                default -> System.out.printf("There is no '%s' operation.\n", operation);
+            }
+            System.out.println();
+        }
+    }
+    public static void exit(){
+        System.out.println("Bye!");
     }
 
-    public static void AnalyseWords() {
-        //Prompt the user with the message: Input string:
-        Scanner scanner = new Scanner(System.in);
-        //encodeMessage(scanner);
-        //decodeMessage(scanner);
-
-        System.out.println(decodeMessage(scanner));
-    }
 
     private static void encodeMessage(Scanner scanner) {
         System.out.println("Input string:");
         String a = scanner.nextLine();
-        System.out.println("The result:");
+        System.out.println("Encoded string:");
         if(a.isEmpty())
         {
             return;
@@ -28,7 +47,7 @@ public class Main {
         //Output all characters in the string, each separated by a single space.
         for (String letter : letters) {
 
-            //System.out.printf("%s = %s\n", letter,ChartoBinary(letter) );
+
             combinedBinaryRepresentation.append(ChartoBinary(letter));
 
         }
@@ -37,17 +56,27 @@ public class Main {
     }
 
     public static String decodeMessage(Scanner scanner){
+
         System.out.println("Input encoded string:");
         String a = scanner.nextLine();
-        System.out.println("The result:");
+
+        boolean x = validateInput(a); // validating input
+        if(!x)
+        {
+            return "";
+        }
+
         if(a.isEmpty())
         {
             return "";
         }
 
         String BinaryRepresentationAsWhole = decodingtoBinary(a);
+        if(BinaryRepresentationAsWhole.length() % 7 != 0) // if the length of the binary representation is not divisible by 7 (meaning it's not a valid character), then it is not valid
+        {
+            return "";
+        }
 
-        //String[] BinaryRepresentation = new String[BinaryRepresentationAsWhole.length() / 7];
         StringBuilder message = new StringBuilder();
         for (int i = 0; i < (BinaryRepresentationAsWhole.length() / 7); i++) {
             String BinaryRepresentaion = BinaryRepresentationAsWhole.substring(i * 7, (i + 1) * 7);
@@ -58,6 +87,33 @@ public class Main {
 
         return message.toString();
 
+    }
+
+    private static boolean validateInput(String a) {
+        for (int i = 0; i < a.length(); i++) {
+            if(a.charAt(i) == '1') // input can only contain 0's and spaces
+            {
+                continue;
+            }
+            {
+                return false;
+            }
+
+
+        }
+        String[] checking = a.split(" ");
+        if(checking.length % 2 != 0) // input must contain an even number of 0's since it is encoded in pairs
+        {
+            return false;
+        }
+
+
+        for (int i = 0; i < checking.length; i+=2) {
+            if(!checking[i].equals("0") && !checking[i].equals("00")) { // input must contain 0's and 00's in the even positions describing if the next 0's are 1's or 0's
+                return false;
+            }
+        }
+        return true;
     }
 
     public static String ChartoBinary(String letter) {
